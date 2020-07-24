@@ -1,0 +1,48 @@
+body
+{
+    padding: 20px;
+}
+
+div
+{
+    padding: 8px;
+}
+
+.row
+{
+    display: flex;
+}
+
+.column
+{
+    flex: 50%;
+}
+
+.left
+{
+    flex: 60%;
+}
+
+.right
+{
+    flex: 40%;
+}
+
+.div-border
+{
+    border: 3px solid black;
+    border-radius: 3px;
+}
+
+table, th, td
+{
+    color: black;
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 10px;
+}
+
+tr:nth-child(odd)
+{
+    background-color: khaki;
+}

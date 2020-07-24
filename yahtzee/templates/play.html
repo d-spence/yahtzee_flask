@@ -1,0 +1,78 @@
+{% extends "layout.html" %}
+{% block content %}
+<h1 style="border-bottom: 1px solid black">YAHTZEE</h1>
+<h3>Game ID: {{ game.id }}</h3>
+<div class="row">
+    <div class="column left">
+        <h2 style="border-bottom: 1px solid black">Round #{{ game.round }} - Player {{ game.p_turn }}'s Turn</h1>
+        <h3>Dice Roll {{ game.roll }}/{{ game.rolls }}</h1>
+        <table>
+            <tr style="background-color: crimson;">
+            {% for d_img in d_imgs %}
+                <td><img src="{{ url_for('static', filename='imgs/' + d_img) }}";/></td>
+            {% endfor %}
+            </tr>
+            <tr style="text-align: center; font-weight: bold;">
+                {% for i in range(5) %}
+                <td>{{ game.dice[i] }}</td>
+                {% endfor %}
+            </tr>
+            <tr style="text-align: center;">
+                <td><a href="{{ url_for('game.hold', d=0) }}" type="button" class="btn btn-secondary btn-sm">Hold</a></td>
+                <td><a href="{{ url_for('game.hold', d=1) }}" type="button" class="btn btn-secondary btn-sm">Hold</a></td>
+                <td><a href="{{ url_for('game.hold', d=2) }}" type="button" class="btn btn-secondary btn-sm">Hold</a></td>
+                <td><a href="{{ url_for('game.hold', d=3) }}" type="button" class="btn btn-secondary btn-sm">Hold</a></td>
+                <td><a href="{{ url_for('game.hold', d=4) }}" type="button" class="btn btn-secondary btn-sm">Hold</a></td>
+            </tr>
+        </table><br>
+
+        {% if game.roll >= game.rolls %}
+            <a href="#" type="button" class="btn btn-danger btn-lg disabled">Roll Dice</a>
+        {% else %}
+            <a href="{{ url_for('game.roll') }}" type="button" class="btn btn-danger btn-lg">Roll Dice</a>
+        {% endif %}
+        <br>
+    </div>
+    <div class="column right">
+        <h4>Player {{ game.p_turn }} Score</h4>
+        <table>
+            <tr style="background-color: crimson;">
+                <th>Category</th><th>Points</th>
+                <th>Category</th><th>Points</th>
+            </tr>
+            <tr>
+                <td>Ones</td><td>{{ game.p_scores[game.p_turn-1]['ones'] }}</td>
+                <td>3 of a Kind</td><td>{{ game.p_scores[game.p_turn-1]['3ofakind'] }}</td>
+            </tr>
+            <tr>
+                <td>Twos</td><td>{{ game.p_scores[game.p_turn-1]['twos'] }}</td>
+                <td>4 of a Kind</td><td>{{ game.p_scores[game.p_turn-1]['4ofakind'] }}</td>
+            </tr>
+            <tr>
+                <td>Threes</td><td>{{ game.p_scores[game.p_turn-1]['threes'] }}</td>
+                <td>Full House</td><td>{{ game.p_scores[game.p_turn-1]['fullhouse'] }}</td>
+            </tr>
+            <tr>
+                <td>Fours</td><td>{{ game.p_scores[game.p_turn-1]['fours'] }}</td>
+                <td>Sm Straight</td><td>{{ game.p_scores[game.p_turn-1]['smstraight'] }}</td>
+            </tr>
+            <tr>
+                <td>Fives</td><td>{{ game.p_scores[game.p_turn-1]['fives'] }}</td>
+                <td>Lg Straight</td><td>{{ game.p_scores[game.p_turn-1]['lgstraight'] }}</td>
+            </tr>
+            <tr>
+                <td>Sixes</td><td>{{ game.p_scores[game.p_turn-1]['sixes'] }}</td>
+                <td>YAHTZEE</td><td>{{ game.p_scores[game.p_turn-1]['yahtzee'] }}</td>
+            </tr>
+            <tr>
+                <td>Bonus</td><td>{{ game.p_scores[game.p_turn-1]['bonus'] }}</td>
+                <td>Chance</td><td>{{ game.p_scores[game.p_turn-1]['chance'] }}</td>
+            </tr>
+            <tr>
+                <td>=SUB=></td><td>{{ game.p_scores[game.p_turn-1]['sub'] }}</td>
+                <td>=TOTAL=></td><td>{{ game.p_scores[game.p_turn-1]['total'] }}</td>
+            </tr>
+        </table><br>
+    </div>
+</div>
+{% endblock content %}

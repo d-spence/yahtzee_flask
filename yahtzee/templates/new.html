@@ -1,0 +1,7 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1>Starting New Game...</h1>
+    <h3>Game ID: {{ game.id }}</h3>
+
+    <a href="{{ url_for('game.play') }}">Start Game...</a>
+{% endblock content %}
