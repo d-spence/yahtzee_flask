@@ -1,11 +1,25 @@
 body
 {
+    background-color: honeydew;
     padding: 20px;
 }
 
 div
 {
     padding: 8px;
+}
+
+table, th, td
+{
+    color: black;
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+tr:nth-child(odd)
+{
+    background-color: khaki;
 }
 
 .row
@@ -32,17 +46,4 @@ div
 {
     border: 3px solid black;
     border-radius: 3px;
-}
-
-table, th, td
-{
-    color: black;
-    border: 1px solid black;
-    border-collapse: collapse;
-    padding: 10px;
-}
-
-tr:nth-child(odd)
-{
-    background-color: khaki;
 }

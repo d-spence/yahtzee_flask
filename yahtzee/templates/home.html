@@ -1,4 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
     <h1>Welcome Home!</h1>
+    
+    <a href="{{ url_for('game.new_game') }}" type="button" class="btn btn-info btn-lg">New Game</a>
 {% endblock content %}
