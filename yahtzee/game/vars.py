@@ -10,7 +10,7 @@ score = {'ones':0, 'twos':0, 'threes':0, 'fours':0, 'fives':0,
 
 class Game:
     """Yahtzee game class"""
-    rolls = 99 # num of rolls a player gets each turn
+    rolls = 3 # num of rolls a player gets each turn
     rounds = 13 # total number of rounds in game
 
     def __init__(self, n_players):
@@ -23,3 +23,8 @@ class Game:
         self.roll = 0 # current roll num
         self.dice = [0, 0, 0, 0, 0] # current dice roll; resets at next player
         self.held = [] # index list of dice that shouldnt be rolled
+
+    def refresh_turn(self):
+        self.roll = 0
+        self.dice = [0, 0, 0, 0, 0]
+        self.held = []

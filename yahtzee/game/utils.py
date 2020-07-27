@@ -26,8 +26,18 @@ def next_turn():
 
     from yahtzee.game.routes import cur_game
 
-    # TODO -> Work on next turn function
-    pass
+    # Check which players turn it is
+    if cur_game.p_turn < cur_game.n_players:
+        cur_game.p_turn += 1
+    else:
+        cur_game.p_turn = 1
+        if cur_game.round < cur_game.rounds:
+            cur_game.round += 1
+        else:
+            print("Game Over") # Temp
+            
+
+    cur_game.refresh_turn()
 
 
 def get_dice_imgs(dice=[0,0,0,0,0], held=[]):

@@ -1,6 +1,7 @@
 import logging
 from flask import render_template, url_for, request, redirect, Blueprint
-from yahtzee.game.utils import roll_dice, get_dice_imgs, get_categories, update_score
+from yahtzee.game.utils import (roll_dice, get_dice_imgs, get_categories, 
+    update_score, next_turn)
 from yahtzee.game.vars import Game
 from yahtzee.game.forms import CategoryForm
 
@@ -19,8 +20,6 @@ def new_game():
 @game.route("/game/play", methods=['GET', 'POST'])
 def play():
     if 'cur_game' in globals():
-        d_imgs = get_dice_imgs(cur_game.dice, cur_game.held) # Dice img string list
-
         categories = get_categories(cur_game.dice) # List of tuples (key, val, str)
         select_categories = [(x, z) for x, y, z in categories] # 2 item tuple
         log.debug(categories)
@@ -34,7 +33,10 @@ def play():
             for k, v, s in categories:
                 if k == pick:
                     update_score(pick, v)
-
+                    next_turn()
+                    form.update_categories()
+        
+        d_imgs = get_dice_imgs(cur_game.dice, cur_game.held) # Dice img string list
         return render_template('play.html', title='Play', game=cur_game, d_imgs=d_imgs, form=form)
     else:
         print("Could not locate game in global variable list; Redirecting to '/game/new'")
