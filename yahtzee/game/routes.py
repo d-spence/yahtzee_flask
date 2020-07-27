@@ -1,6 +1,6 @@
 import logging
 from flask import render_template, url_for, request, redirect, Blueprint
-from yahtzee.game.utils import roll_dice, get_dice_imgs, get_categories
+from yahtzee.game.utils import roll_dice, get_dice_imgs, get_categories, update_score
 from yahtzee.game.vars import Game
 from yahtzee.game.forms import CategoryForm
 
@@ -21,14 +21,19 @@ def play():
     if 'cur_game' in globals():
         d_imgs = get_dice_imgs(cur_game.dice, cur_game.held) # Dice img string list
 
-        categories = get_categories(cur_game.dice) # List of tuples
+        categories = get_categories(cur_game.dice) # List of tuples (key, val, str)
         select_categories = [(x, z) for x, y, z in categories] # 2 item tuple
         log.debug(categories)
 
         form = CategoryForm()
-        form.update_categories(cats=select_categories) # Add function to get categories
+        form.update_categories(cats=select_categories) # Update categories when page loads
         if form.validate_on_submit():
-            log.debug(form.category.data)
+            pick = form.category.data # Should return category key value
+            log.debug(pick)
+            
+            for k, v, s in categories:
+                if k == pick:
+                    update_score(pick, v)
 
         return render_template('play.html', title='Play', game=cur_game, d_imgs=d_imgs, form=form)
     else:

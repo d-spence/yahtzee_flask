@@ -6,7 +6,6 @@ from copy import copy
 
 log = logging.getLogger(__name__)
 
-# TODO -> Logic for what happens after category is submitted; scoring, next player, etc.
 
 # Helper Functions =============================================================
 def roll_dice(dice=[0,0,0,0,0], held=[]):
@@ -20,6 +19,15 @@ def roll_dice(dice=[0,0,0,0,0], held=[]):
             dice[i] = SystemRandom().randint(1, 6)
 
     return dice
+
+
+def next_turn():
+    """Controls which player rolls next"""
+
+    from yahtzee.game.routes import cur_game
+
+    # TODO -> Work on next turn function
+    pass
 
 
 def get_dice_imgs(dice=[0,0,0,0,0], held=[]):
@@ -43,9 +51,9 @@ def tally_multi_dice(dice, n=0, all_dice=False):
     all_dice: will add values of all dice together"""
 
     total = 0
-    if all_dice == True: # Tally all dice if n is -1
+    if all_dice == True: # Tally all dice if True
         total = sum(dice)
-    else: # Tally only dice that match n
+    else: # Tally only dice that match n dice face
         for d in dice:
             if n == d:
                 total += d
@@ -101,6 +109,7 @@ def get_categories(dice=[0,0,0,0,0]):
     player_score = cur_game.p_scores[cur_game.p_turn]
 
     count = count_multi_dice(dice)
+    log.debug(count)
     avail_cats = [k for k in player_score if player_score.get(k) == 0] # If category is 0
     valid_cats = [] # List of categories that are valid based on avail_cats
     log.debug(f"avail_cats = {avail_cats}")
@@ -182,10 +191,10 @@ def cat_xofakind_yahtzee(dice, avail_cats, valid_score, count):
     cats = []
     for d, n in count:
         if n == 3 and '3ofakind' in avail_cats:
-            valid_score['3ofakind'] = tally_multi_dice(dice, -1)
+            valid_score['3ofakind'] = tally_multi_dice(dice, all_dice=True)
             cats.append('3ofakind')
         if n == 4 and '4ofakind' in avail_cats:
-            valid_score['4ofakind'] = tally_multi_dice(dice, -1)
+            valid_score['4ofakind'] = tally_multi_dice(dice, all_dice=True)
             cats.append('4ofakind')
         if n == 5 and 'yahtzee' in avail_cats:
             if 0 not in dice:
@@ -213,25 +222,19 @@ def cat_straight(dice, avail_cats, valid_score):
 
 
 # Scoring Functions ============================================================
-def update_score(dice, avail_cats, valid_score, player_score):
-    """Update a player's score"""
+def update_score(pick, value):
+    """Update a player's score
+    
+    pick: Should be a scoring category dictionary value (eg 'ones')"""
 
-    # pick = input("Select Category: ")
-
-    # try:
-    #     if int(pick) == 0:
-    #         print("No category updated...")
-    #         break
-    #     catStr = catValid[int(pick) - 1]
-    #     playerScore[catStr] = validScore.get(catStr)
-
-    #     print(catStr, "updated...")
-    #     break
-    # except:
-    #     print("Not a valid category...")
+    from yahtzee.game.routes import cur_game
+ 
+    player_score = cur_game.p_scores[cur_game.p_turn]
+    player_score[pick] = value # Update player_score with pt value
+    log.debug(f"player_score = {player_score}")
 
     # Logic for bonus score; 63 pts or greater for sub-section bonus
-    if 'bonus' in avail_cats:
+    if player_score['bonus'] == 0:
         if total_score(player_score, sub=True) >= 63:
             player_score['bonus'] = 35 # Bonus score update
 
