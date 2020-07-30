@@ -26,17 +26,20 @@ def next_turn():
 
     from yahtzee.game.routes import cur_game
 
+    if cur_game.round < cur_game.rounds:
+        cur_game.round += 1
+    else:
+        print("Game Over") # Temp; Should return to results screen
+        return False
+
     # Check which players turn it is
     if cur_game.p_turn < cur_game.n_players:
         cur_game.p_turn += 1
     else:
-        cur_game.p_turn = 1
-        if cur_game.round < cur_game.rounds:
-            cur_game.round += 1
-        else:
-            print("Game Over") # Temp
+        cur_game.p_turn = 1 # Start turn sequence over
 
     cur_game.refresh_turn()
+    return True
 
 
 def get_dice_imgs(dice=[0,0,0,0,0], held=[]):
@@ -114,37 +117,45 @@ def get_categories(dice=[0,0,0,0,0]):
 
     from yahtzee.game.routes import cur_game
 
+    # If 1st roll, return empty list
+    if cur_game.roll == 0:
+        return []
+
     valid_score = copy(cur_game.p_scores[0]) # Player 0 is used for scoring logic
     player_score = cur_game.p_scores[cur_game.p_turn]
 
     count = count_multi_dice(dice)
     log.debug(count)
     avail_cats = [k for k in player_score if player_score.get(k) == 0] # If category is 0
-    valid_cats = [] # List of categories that are valid based on avail_cats
     log.debug(f"avail_cats = {avail_cats}")
 
-    # Filter available categories and add them to valid_cats list
-    valid_cats.extend(cat_1to6(dice, avail_cats, valid_score))
-    valid_cats.extend(cat_fullhouse(dice, avail_cats, valid_score, count))
-    valid_cats.extend(cat_xofakind_yahtzee(dice, avail_cats, valid_score, count))
-    valid_cats.extend(cat_straight(dice, avail_cats, valid_score))
+    # Filter available categories
+    cat_1to6(dice, avail_cats, valid_score)
+    cat_fullhouse(dice, avail_cats, valid_score, count)
+    cat_xofakind_yahtzee(dice, avail_cats, valid_score, count)
+    cat_straight(dice, avail_cats, valid_score)
 
     # Create a formatted list of tuple values for use with CategoryForm's SelectField
-    valid_cats_f = format_categories(valid_score)
+    valid_cats_f = format_categories(avail_cats, valid_score)
     log.debug(f"valid_cats_f = {valid_cats_f}")
 
     return valid_cats_f
 
 
-def format_categories(valid_score):
+def format_categories(avail_cats, valid_score, all_cats=True):
     """Return a list of tuples containing key, value and formatted string
+
+    all_cats:bool: Will return all categories (including 0's) if True
 
     Ex: ('ones', 1, 'Ones -- 1')"""
 
     valid_cats_f = []
     for k, v in sorted(valid_score.items(), key=lambda x: x[1], reverse=True):
-        if valid_score.get(k) != 0:
-            valid_cats_f.append((k, v, f"{k.title()} -- {v}"))
+        if all_cats == True:
+            if k in avail_cats and k not in ['sub', 'total', 'bonus']:
+                valid_cats_f.append((k, v, f"{k.title()} - {v}"))
+        elif valid_score.get(k) != 0:
+            valid_cats_f.append((k, v, f"{k.title()} - {v}"))
 
     return valid_cats_f
 
@@ -245,7 +256,7 @@ def update_score(pick, value):
     # Logic for bonus score; 63 pts or greater for sub-section bonus
     if player_score['bonus'] == 0:
         if total_score(player_score, sub=True) >= 63:
-            player_score['bonus'] = 35 # Bonus score update
+            player_score['bonus'] = 35 # Add bonus score
 
     player_score['sub'] = total_score(player_score, sub=True)
     player_score['total'] = total_score(player_score) # Total score update

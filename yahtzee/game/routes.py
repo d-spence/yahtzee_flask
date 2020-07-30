@@ -39,21 +39,20 @@ def play():
         d_imgs = get_dice_imgs(cur_game.dice, cur_game.held) # Dice img string list
         return render_template('play.html', title='Play', game=cur_game, d_imgs=d_imgs, form=form)
     else:
-        print("Could not locate game in global variable list; Redirecting to '/game/new'")
-        return redirect(url_for('game.new_game'))
+        log.warning("Could not locate game in global variable list; Redirecting to '/game/new'")
+        return redirect(url_for('main.home'))
 
 
 @game.route("/game/roll")
 def roll():
-    try:
+    if 'cur_game' in globals():
         cur_game.dice = roll_dice(cur_game.dice, cur_game.held)
         cur_game.roll += 1 # Increment roll num
 
         return redirect(url_for('game.play'))
-    except Exception as e:
-        print(e)
-        print("Could not roll dice; Redirecting to '/game/new'")
-        return redirect(url_for('game.new_game'))
+    else:
+        log.warning("Could not roll dice; Redirecting to '/game/new'")
+        return redirect(url_for('main.home'))
 
 
 @game.route("/game/hold/<int:d>")
@@ -72,7 +71,7 @@ def results():
         p_scores = [(pos, p) for pos, p in enumerate(cur_game.p_scores) if pos != 0]
         return render_template('results.html', title='Results', p_scores=p_scores)
     else:
-        print("Could not locate game in global variable list; Redirecting to '/game/new'")
+        log.warning("Could not locate game in global variable list; Redirecting to '/game/new'")
         return redirect(url_for('game.new_game'))
 
 
@@ -84,7 +83,7 @@ def test():
     category_form = CategoryForm()
     category_form.update_categories(cats)
     if category_form.validate_on_submit():
-        print(f"debug: {category_form.content.data} was submitted.")
+        log.debug(f"{category_form.content.data} was submitted.")
         return redirect(url_for('game.test'))
 
     return render_template('test.html', title='Test', form=category_form)
