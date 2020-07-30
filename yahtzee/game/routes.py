@@ -13,7 +13,7 @@ game = Blueprint('game', __name__)
 @game.route("/game/new")
 def new_game():
     global cur_game
-    cur_game = Game(1)
+    cur_game = Game(4)
     return render_template('new.html', title='New Game', game=cur_game)
 
 
@@ -64,6 +64,16 @@ def hold(d):
         cur_game.held.remove(d)
 
     return redirect(url_for('game.play'))
+
+
+@game.route("/game/results")
+def results():
+    if 'cur_game' in globals():
+        p_scores = [(pos, p) for pos, p in enumerate(cur_game.p_scores) if pos != 0]
+        return render_template('results.html', title='Results', p_scores=p_scores)
+    else:
+        print("Could not locate game in global variable list; Redirecting to '/game/new'")
+        return redirect(url_for('game.new_game'))
 
 
 # Debug route for testing

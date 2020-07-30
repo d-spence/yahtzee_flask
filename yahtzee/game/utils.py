@@ -35,7 +35,6 @@ def next_turn():
             cur_game.round += 1
         else:
             print("Game Over") # Temp
-            
 
     cur_game.refresh_turn()
 

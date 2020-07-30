@@ -42,6 +42,11 @@ tr:nth-child(odd)
     flex: 40%;
 }
 
+.center
+{
+    flex: 25%
+}
+
 .div-border
 {
     border: 3px solid black;
