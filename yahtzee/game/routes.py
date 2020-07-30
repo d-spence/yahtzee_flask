@@ -10,10 +10,10 @@ log = logging.getLogger(__name__)
 game = Blueprint('game', __name__)
 
 
-@game.route("/game/new")
-def new_game():
+@game.route("/game/new/<int:p>")
+def new_game(p=0):
     global cur_game
-    cur_game = Game(4)
+    cur_game = Game(p) # p is the number of players
     return render_template('new.html', title='New Game', game=cur_game)
 
 

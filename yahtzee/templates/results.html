@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
-    <h1 style="border-bottom: 1px solid black;">Results</h1>
+    <h1 class="underline">Results</h1>
     <div class="row">
         {% for pos, p in p_scores %}
             <div class="column center">
@@ -47,5 +47,5 @@
         {% endfor %}
     </div>
     
-    <a href="{{ url_for('game.new_game') }}" type="button" class="btn btn-info btn-lg">Replay</a>
+    <a href="{{ url_for('game.home') }}" type="button" class="btn btn-info btn-lg">Play Again!</a>
 {% endblock content %}

@@ -1,7 +1,13 @@
+header
+{
+    background-color: crimson;
+}
+
 body
 {
     background-color: honeydew;
     padding: 20px;
+    margin-top: 4rem;
 }
 
 div
@@ -51,4 +57,9 @@ tr:nth-child(odd)
 {
     border: 3px solid black;
     border-radius: 3px;
+}
+
+.underline
+{
+    border-bottom: 1px solid black;
 }
