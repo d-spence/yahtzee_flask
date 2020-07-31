@@ -33,15 +33,15 @@ def next_turn():
         if cur_game.p_turn == cur_game.n_players:
             return False
 
-    # Increment round number
-    if cur_game.round < cur_game.rounds:
-        cur_game.round += 1
-
     # Switch to next player
     if cur_game.p_turn < cur_game.n_players:
         cur_game.p_turn += 1
     else:
         cur_game.p_turn = 1 # Start turn sequence over
+        
+        # Increment round number
+        if cur_game.round < cur_game.rounds:
+            cur_game.round += 1
 
     cur_game.refresh_turn()
     return True
@@ -128,10 +128,11 @@ def get_categories(dice=[0,0,0,0,0]):
 
     valid_score = copy(cur_game.p_scores[0]) # Player 0 is used for scoring logic
     player_score = cur_game.p_scores[cur_game.p_turn]
+    p_void = cur_game.p_void[cur_game.p_turn] # List of voided categories 
 
     count = count_multi_dice(dice)
     log.debug(count)
-    avail_cats = [k for k in player_score if player_score.get(k) == 0] # If category is 0
+    avail_cats = [k for k in player_score if player_score.get(k) == 0 and k not in p_void] # If category is 0
     log.debug(f"avail_cats = {avail_cats}")
 
     # Filter available categories
@@ -263,6 +264,11 @@ def update_score(pick, value):
     player_score = cur_game.p_scores[cur_game.p_turn]
     player_score[pick] += value # Update player_score with pt value
     log.debug(f"player_score = {player_score}")
+
+    # Add value to cur_game.p_void if scored zero; Disables scoring for category
+    if value == 0:
+        cur_game.p_void[cur_game.p_turn].append(pick)
+        log.debug(cur_game.p_void[cur_game.p_turn])
 
     # Logic for bonus score; 63 pts or greater for sub-section bonus
     if player_score['bonus'] == 0:

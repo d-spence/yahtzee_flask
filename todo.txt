@@ -1,8 +1,10 @@
 yahtzee_flask ==================================================================
 
 [TODO]
-+ Disallow categories that are scored zero to be scored again on subsequent turns
++ Feature: Allow naming players on new_game page with defaults 'Player1, Player2, etc'
++ Feature: Allow multiple games at once using game ids
 
 [COMPLETED]
 + Enable multiple yahtzees per game (add extra 50 points to yahtzee category)
 + Fix failure to return results page when game is finished
++ Disallow categories that are scored zero to be scored again on subsequent turns

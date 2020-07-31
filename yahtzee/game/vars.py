@@ -18,6 +18,7 @@ class Game:
         self.n_players = n_players # number of players (max 4)
         self.p_names = ['Player 0','Player 1', 'Player 2', 'Player 3', 'Player 4']
         self.p_scores = [copy(score) for p in range(self.n_players+1)]
+        self.p_void = [[] for p in range(self.n_players+1)] # Categories scored as zero
         self.p_turn = 1 # player num
         self.round = 1 # current round num
         self.roll = 0 # current roll num
