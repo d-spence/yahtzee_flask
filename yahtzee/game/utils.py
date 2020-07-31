@@ -28,13 +28,16 @@ def next_turn():
 
     from yahtzee.game.routes import cur_game
 
+    # Check if game is over
+    if cur_game.round == cur_game.rounds:
+        if cur_game.p_turn == cur_game.n_players:
+            return False
+
+    # Increment round number
     if cur_game.round < cur_game.rounds:
         cur_game.round += 1
-    else:
-        print("Game Over") # Temp; Should return to results screen
-        return False
 
-    # Check which players turn it is
+    # Switch to next player
     if cur_game.p_turn < cur_game.n_players:
         cur_game.p_turn += 1
     else:

@@ -23,8 +23,23 @@ class Game:
         self.roll = 0 # current roll num
         self.dice = [0, 0, 0, 0, 0] # current dice roll; resets at next player
         self.held = [] # index list of dice that shouldnt be rolled
+        self.winner = [] # Player(s) name with the highest score
+
 
     def refresh_turn(self):
         self.roll = 0
         self.dice = [0, 0, 0, 0, 0]
         self.held = []
+
+
+    def get_winner(self):
+        hi_score = 0
+        for pos, score in enumerate(self.p_scores):
+            if pos == 0: # Skip Player 0
+                continue
+
+            if score['total'] > hi_score:
+                self.winner = [self.p_names[pos]]
+                hi_score = score['total']
+            elif score['total'] == hi_score:
+                self.winner.append(self.p_names[pos])

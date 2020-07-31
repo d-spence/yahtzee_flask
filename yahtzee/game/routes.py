@@ -33,8 +33,11 @@ def play():
             for k, v, s in categories:
                 if k == pick:
                     update_score(pick, v)
-                    next_turn()
-                    form.update_categories()
+                    if next_turn() == False:
+                        cur_game.get_winner()
+                        return redirect(url_for('game.results'))
+                    else:
+                        form.update_categories()
         
         d_imgs = get_dice_imgs(cur_game.dice, cur_game.held) # Dice img string list
         return render_template('play.html', title='Play', game=cur_game, d_imgs=d_imgs, form=form)
@@ -69,10 +72,10 @@ def hold(d):
 def results():
     if 'cur_game' in globals():
         p_scores = [(pos, p) for pos, p in enumerate(cur_game.p_scores) if pos != 0]
-        return render_template('results.html', title='Results', p_scores=p_scores)
+        return render_template('results.html', title='Results', p_scores=p_scores, winner=cur_game.winner)
     else:
         log.warning("Could not locate game in global variable list; Redirecting to '/game/new'")
-        return redirect(url_for('game.new_game'))
+        return redirect(url_for('main.home'))
 
 
 # Debug route for testing
