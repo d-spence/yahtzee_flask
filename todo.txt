@@ -1,0 +1,8 @@
+yahtzee_flask ==================================================================
+
+[TODO]
++ Fix failure to return results page when game is finished
++ Disallow categories that are scored zero to be scored again on subsequent turns
++ Enable multiple yahtzees per game (add extra 50 points to yahtzee category)
+
+[COMPLETED]

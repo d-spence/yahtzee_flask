@@ -22,7 +22,9 @@ def roll_dice(dice=[0,0,0,0,0], held=[]):
 
 
 def next_turn():
-    """Controls which player rolls next"""
+    """Controls which player rolls next
+    
+    Returns True if game should go to next turn or False if game is over"""
 
     from yahtzee.game.routes import cur_game
 
@@ -135,6 +137,10 @@ def get_categories(dice=[0,0,0,0,0]):
     cat_xofakind_yahtzee(dice, avail_cats, valid_score, count)
     cat_straight(dice, avail_cats, valid_score)
 
+    # Add yahtzee to avail_cats if conditions are met
+    if valid_score['yahtzee'] != 0 and 'yahtzee' not in avail_cats:
+        avail_cats.append('yahtzee')
+
     # Create a formatted list of tuple values for use with CategoryForm's SelectField
     valid_cats_f = format_categories(avail_cats, valid_score)
     log.debug(f"valid_cats_f = {valid_cats_f}")
@@ -150,6 +156,7 @@ def format_categories(avail_cats, valid_score, all_cats=True):
     Ex: ('ones', 1, 'Ones -- 1')"""
 
     valid_cats_f = []
+    # Sort valid categories in highest to lowest score order
     for k, v in sorted(valid_score.items(), key=lambda x: x[1], reverse=True):
         if all_cats == True:
             if k in avail_cats and k not in ['sub', 'total', 'bonus']:
@@ -216,7 +223,8 @@ def cat_xofakind_yahtzee(dice, avail_cats, valid_score, count):
         if n == 4 and '4ofakind' in avail_cats:
             valid_score['4ofakind'] = tally_multi_dice(dice, all_dice=True)
             cats.append('4ofakind')
-        if n == 5 and 'yahtzee' in avail_cats:
+        # Yahtzee can be scored multiple times in a game
+        if n == 5:
             if 0 not in dice:
                 valid_score['yahtzee'] = 50
                 cats.append('yahtzee')
@@ -250,7 +258,7 @@ def update_score(pick, value):
     from yahtzee.game.routes import cur_game
  
     player_score = cur_game.p_scores[cur_game.p_turn]
-    player_score[pick] = value # Update player_score with pt value
+    player_score[pick] += value # Update player_score with pt value
     log.debug(f"player_score = {player_score}")
 
     # Logic for bonus score; 63 pts or greater for sub-section bonus
