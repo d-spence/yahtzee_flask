@@ -51,7 +51,7 @@
         </form>
     </div>
     <div class="column right">
-        <h4>Player {{ game.p_turn }}'s Score</h4>
+        <h4><strong>Player {{ game.p_turn }}'s Score</strong></h4>
         <table>
             <tr style="background-color: crimson;">
                 <th>Category</th><th>Points</th>
@@ -90,6 +90,24 @@
                 <td>=TOTAL=></td><td>{{ game.p_scores[game.p_turn]['total'] }}</td>
             </tr>
         </table><br>
+        <div>
+            <h5><strong>Void Categories</strong></h5>
+            <p>
+                {% if game.p_void %}
+                    {% for v in game.p_void[game.p_turn] %}
+                        {{ v }} 
+                    {% endfor %}
+                {% endif %}
+            </p>
+        </div>
+        <div>
+            <h5><strong>Player Scores</strong></h5>
+            {% for i in range(1, game.n_players+1) %}
+                {% if i != game.p_turn %}
+                    <p>{{ game.p_names[i] }} - {{ game.p_scores[i]['total'] }}</p>
+                {% endif %}
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock content %}

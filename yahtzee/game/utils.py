@@ -268,7 +268,11 @@ def update_score(pick, value):
     # Add value to cur_game.p_void if scored zero; Disables scoring for category
     if value == 0:
         cur_game.p_void[cur_game.p_turn].append(pick)
-        log.debug(cur_game.p_void[cur_game.p_turn])
+
+        try:
+            cur_game.p_void[cur_game.p_turn].remove('Nothing')
+        except:
+            pass
 
     # Logic for bonus score; 63 pts or greater for sub-section bonus
     if player_score['bonus'] == 0:
