@@ -4,7 +4,7 @@
 <h4>Game ID: {{ game.id }}</h4>
 <div class="row">
     <div class="column left">
-        <h2 style="border-bottom: 1px solid black"><strong>Round #{{ game.round }} - Player {{ game.p_turn }}'s Turn</strong></h1>
+        <h2 style="border-bottom: 1px solid black"><strong>Round #{{ game.round }} - {{ game.p_names[game.p_turn] }}'s Turn</strong></h1>
         <h3>Dice Roll {{ game.roll }}/{{ game.rolls }}</h1>
         <table>
             <tr style="background-color: crimson;">
@@ -51,7 +51,7 @@
         </form>
     </div>
     <div class="column right">
-        <h4><strong>Player {{ game.p_turn }}'s Score</strong></h4>
+        <h4><strong>{{ game.p_names[game.p_turn] }}'s Score</strong></h4>
         <table>
             <tr style="background-color: crimson;">
                 <th>Category</th><th>Points</th>

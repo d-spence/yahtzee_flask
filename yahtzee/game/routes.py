@@ -3,18 +3,31 @@ from flask import render_template, url_for, request, redirect, Blueprint
 from yahtzee.game.utils import (roll_dice, get_dice_imgs, get_categories, 
     update_score, next_turn)
 from yahtzee.game.vars import Game
-from yahtzee.game.forms import CategoryForm
+from yahtzee.game.forms import CategoryForm, PlayerNamesForm
 
 log = logging.getLogger(__name__)
 
 game = Blueprint('game', __name__)
 
 
-@game.route("/game/new/<int:p>")
+@game.route("/game/new/<int:p>", methods=['GET', 'POST'])
 def new_game(p=0):
-    global cur_game
-    cur_game = Game(p) # p is the number of players
-    return render_template('new.html', title='New Game', game=cur_game)
+    if 'cur_game' not in globals() or p != 0:
+        global cur_game
+        cur_game = Game(p) # p is the number of players
+
+    form = PlayerNamesForm()
+    if form.validate_on_submit():
+        # Assign name values obtained from PlayerNamesForm
+        cur_game.p_names[1] = form.player1.data
+        cur_game.p_names[2] = form.player2.data
+        cur_game.p_names[3] = form.player3.data
+        cur_game.p_names[4] = form.player4.data
+        log.debug(cur_game.p_names)
+
+        return redirect(url_for('game.play'))
+
+    return render_template('new.html', title='New Game', form=form, game=cur_game)
 
 
 @game.route("/game/play", methods=['GET', 'POST'])
