@@ -1,6 +1,8 @@
 # Yahtzee
 
-The classic dice game Yahtzee, recreated using Python and Flask. 
+The classic dice game Yahtzee, recreated using Python and Flask.
+
+For a video demonstration of this project, [click here.](https://www.youtube.com/watch?v=l2iZLh5wNi4)
 
 ## Description
 
